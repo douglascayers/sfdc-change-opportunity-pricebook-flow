@@ -330,6 +330,7 @@ If no then add the product name to a list to prompt user about missing products.
         <valueField>Id</valueField>
     </dynamicChoiceSets>
     <label>Change Opportunity Price Book and Keep Line Items</label>
+    <description>Takes an opportunity id as parameter. When flow starts it prompts user to choose a new price book for the opportunity then replaces all the line items with equivalent products and quantities from the new price book. If any product cannot be found in the new price book then user is prompted how to proceed: remove from opportunity or cancel operation.</description>
     <loops>
         <description>Iterate through the existing line items and build up a new list with the same product, quantity, description, and unit price but using the new price book entry. If a product is not found in the new price book then we&apos;ll keep track of that too and prompt user on how to proceed after the loop.</description>
         <name>LoopOpportunityLineItems</name>
