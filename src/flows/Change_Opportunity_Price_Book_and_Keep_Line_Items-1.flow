@@ -346,15 +346,13 @@ If no then add the product name to a list to prompt user about missing products.
             <targetReference>IsNewPriceBookMissingProducts</targetReference>
         </noMoreValuesConnector>
     </loops>
+    <processType>Flow</processType>
     <recordCreates>
         <description>Insert the new opportunity line items that are associated with the new price book the user chose at beginning of the flow.</description>
         <name>CreateNewOpportunityLineItems</name>
         <label>CreateNewOpportunityLineItems</label>
         <locationX>811</locationX>
         <locationY>754</locationY>
-        <faultConnector>
-            <targetReference>SendErrorEmail</targetReference>
-        </faultConnector>
         <inputReference>newOpportunityLineItems</inputReference>
     </recordCreates>
     <recordDeletes>
@@ -366,9 +364,6 @@ If no then add the product name to a list to prompt user about missing products.
         <connector>
             <targetReference>AssignOpportunityPriceBook</targetReference>
         </connector>
-        <faultConnector>
-            <targetReference>SendErrorEmail</targetReference>
-        </faultConnector>
         <inputReference>opportunityLineItems</inputReference>
     </recordDeletes>
     <recordLookups>
@@ -381,9 +376,6 @@ If no then add the product name to a list to prompt user about missing products.
         <connector>
             <targetReference>DidFindNewPriceBookEntry</targetReference>
         </connector>
-        <faultConnector>
-            <targetReference>SendErrorEmail</targetReference>
-        </faultConnector>
         <filters>
             <field>Pricebook2Id</field>
             <operator>EqualTo</operator>
@@ -412,9 +404,6 @@ If no then add the product name to a list to prompt user about missing products.
         <connector>
             <targetReference>GetOpportunityLineItems</targetReference>
         </connector>
-        <faultConnector>
-            <targetReference>SendErrorEmail</targetReference>
-        </faultConnector>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -438,9 +427,6 @@ If no then add the product name to a list to prompt user about missing products.
         <connector>
             <targetReference>ChooseNewPriceBook</targetReference>
         </connector>
-        <faultConnector>
-            <targetReference>SendErrorEmail</targetReference>
-        </faultConnector>
         <filters>
             <field>OpportunityId</field>
             <operator>EqualTo</operator>
@@ -465,9 +451,6 @@ If no then add the product name to a list to prompt user about missing products.
         <connector>
             <targetReference>GetNewPriceBookEntry</targetReference>
         </connector>
-        <faultConnector>
-            <targetReference>SendErrorEmail</targetReference>
-        </faultConnector>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -489,9 +472,6 @@ If no then add the product name to a list to prompt user about missing products.
         <connector>
             <targetReference>HaveOpportunityLineItemsToCreate</targetReference>
         </connector>
-        <faultConnector>
-            <targetReference>SendErrorEmail</targetReference>
-        </faultConnector>
         <inputReference>opportunity</inputReference>
     </recordUpdates>
     <screens>
@@ -520,29 +500,6 @@ If no then add the product name to a list to prompt user about missing products.
             <fieldText>New Price Book</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>false</isRequired>
-        </fields>
-    </screens>
-    <screens>
-        <name>FaultScreen</name>
-        <label>FaultScreen</label>
-        <locationX>858</locationX>
-        <locationY>96</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <fields>
-            <name>FaultScreen_Paragraph1</name>
-            <fieldText>&lt;SPAN ALIGN=&quot;LEFT&quot;&gt;&lt;FONT FACE=&quot;Arial&quot; STYLE=&quot;font-size:12px&quot; COLOR=&quot;#000000&quot; LETTERSPACING=&quot;0&quot; KERNING=&quot;0&quot;&gt;Whoops, the attempt to change the opportunity price book failed.&lt;/FONT&gt;&lt;/SPAN&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <fields>
-            <name>FaultScreen_Paragraph2</name>
-            <fieldText>&lt;SPAN ALIGN=&quot;LEFT&quot;&gt;&lt;FONT FACE=&quot;Arial&quot; STYLE=&quot;font-size:12px&quot; COLOR=&quot;#000000&quot; LETTERSPACING=&quot;0&quot; KERNING=&quot;1&quot;&gt;Your System Administrator has been notified with an email.&lt;/FONT&gt;&lt;/SPAN&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <fields>
-            <name>FaultScreen_Paragraph3</name>
-            <fieldText>&lt;SPAN ALIGN=&quot;LEFT&quot;&gt;&lt;FONT FACE=&quot;Courier New&quot; STYLE=&quot;font-size:12px&quot; COLOR=&quot;#000000&quot; LETTERSPACING=&quot;0&quot; KERNING=&quot;0&quot;&gt;&lt;/FONT&gt;&lt;/SPAN&gt;&lt;DIV ALIGN=&quot;LEFT&quot;&gt;&lt;FONT FACE=&quot;Courier New&quot; STYLE=&quot;font-size:12px&quot; COLOR=&quot;#000000&quot; LETTERSPACING=&quot;0&quot; KERNING=&quot;0&quot;&gt;{!$Flow.FaultMessage}&lt;/FONT&gt;&lt;/DIV&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
         </fields>
     </screens>
     <screens>
