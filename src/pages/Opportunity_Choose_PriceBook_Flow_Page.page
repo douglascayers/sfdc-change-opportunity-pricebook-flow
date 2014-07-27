@@ -1,0 +1,6 @@
+<apex:page standardController="Opportunity" showHeader="true" sidebar="false">
+    <flow:interview name="Change_Opportunity_Price_Book_and_Keep_Line_Items"
+                    finishLocation="{!URLFOR($Action.Opportunity.View, record.id)}">
+        <apex:param name="opportunityId" value="{!record.id}"/>
+    </flow:interview>
+</apex:page>

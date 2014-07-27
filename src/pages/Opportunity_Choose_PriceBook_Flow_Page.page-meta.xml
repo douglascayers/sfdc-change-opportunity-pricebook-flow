@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>31.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Embeds flow for custom change price book behavior that will try to recreate new line items for the equivalent products chosen from the new price book.</description>
+    <label>Opportunity_Choose_PriceBook_Flow_Page</label>
+</ApexPage>
