@@ -1,108 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <assignments>
-        <description>Adds the new opportunity line item to the collection to later be inserted once done iterating the loop.</description>
-        <name>AddNewOpportunityLineItem</name>
-        <label>AddNewOpportunityLineItem</label>
-        <locationX>532</locationX>
-        <locationY>519</locationY>
-        <assignmentItems>
-            <assignToReference>newOpportunityLineItems</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <elementReference>newOpportunityLineItem</elementReference>
-            </value>
-        </assignmentItems>
+    <apexPluginCalls>
+        <description>Attempts to change the price book but if any products on original line items don&apos;t exist in new price book then halt the process so we can prompt user how to continue.</description>
+        <name>Change_Price_Book_with_Caution</name>
+        <label>Change Price Book with Caution</label>
+        <locationX>109</locationX>
+        <locationY>228</locationY>
+        <apexClass>ChangeOpportunityPriceBookProcessPlugin</apexClass>
         <connector>
-            <targetReference>LoopOpportunityLineItems</targetReference>
+            <targetReference>IsNewPriceBookMissingProducts</targetReference>
         </connector>
-    </assignments>
-    <assignments>
-        <description>Copy user-entered data from the old opportunity line item into the new opportunity line item.</description>
-        <name>AssignNewOpportunityLineItem</name>
-        <label>AssignNewOpportunityLineItem</label>
-        <locationX>682</locationX>
-        <locationY>521</locationY>
-        <assignmentItems>
-            <assignToReference>newOpportunityLineItem.Description</assignToReference>
-            <operator>Assign</operator>
+        <inputParameters>
+            <name>opportunityId</name>
             <value>
-                <elementReference>opportunityLineItem.Description</elementReference>
+                <elementReference>opportunityId</elementReference>
             </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>newOpportunityLineItem.Quantity</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>opportunityLineItem.Quantity</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>newOpportunityLineItem.UnitPrice</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>opportunityLineItem.UnitPrice</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>newOpportunityLineItem.OpportunityId</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>opportunity.Id</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>newOpportunityLineItem.PricebookEntryId</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>newPriceBookEntry.Id</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>AddNewOpportunityLineItem</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>If the new price book entry does not exist then keep track of those products so we can notify the user before changing the opportunity price book and swapping out line items. User may decide to cancel this operation if any products are missing, or they may decide to proceed without those products.</description>
-        <name>AssignNotFoundProduct</name>
-        <label>AssignNotFoundProduct</label>
-        <locationX>532</locationX>
-        <locationY>429</locationY>
-        <assignmentItems>
-            <assignToReference>notFoundProductsString</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <elementReference>product.Name</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>notFoundProductsString</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>,</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>LoopOpportunityLineItems</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Update the opportunity to now associate with the new price book the user chose at beginning of the flow. This needs to happen AFTER we have deleted any existing opportunity line items that were associated with the previous price book.</description>
-        <name>AssignOpportunityPriceBook</name>
-        <label>AssignOpportunityPriceBook</label>
-        <locationX>373</locationX>
-        <locationY>755</locationY>
-        <assignmentItems>
-            <assignToReference>opportunity.Pricebook2Id</assignToReference>
-            <operator>Assign</operator>
+        </inputParameters>
+        <inputParameters>
+            <name>priceBookId</name>
             <value>
                 <elementReference>NewPriceBookIdChoice</elementReference>
             </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>UpdateOpportunity</targetReference>
-        </connector>
-    </assignments>
+        </inputParameters>
+        <inputParameters>
+            <name>stopIfWillLoseLineItems</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>notFoundProductsString</assignToReference>
+            <name>missingProductNames</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>willLoseLineItems</assignToReference>
+            <name>willLoseLineItems</name>
+        </outputParameters>
+    </apexPluginCalls>
+    <apexPluginCalls>
+        <name>Change_Price_Book_with_Fervor</name>
+        <label>Change Price Book with Fervor</label>
+        <locationX>201</locationX>
+        <locationY>574</locationY>
+        <apexClass>ChangeOpportunityPriceBookProcessPlugin</apexClass>
+        <inputParameters>
+            <name>opportunityId</name>
+            <value>
+                <elementReference>opportunityId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>priceBookId</name>
+            <value>
+                <elementReference>NewPriceBookIdChoice</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>stopIfWillLoseLineItems</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>notFoundProductsString</assignToReference>
+            <name>missingProductNames</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>willLoseLineItems</assignToReference>
+            <name>willLoseLineItems</name>
+        </outputParameters>
+    </apexPluginCalls>
     <choices>
         <name>PromptUserToContinue_NotRemoveMissingProductsFromOpportunity</name>
         <choiceText>&lt;SPAN ALIGN=&quot;LEFT&quot;&gt;&lt;FONT FACE=&quot;Arial&quot; STYLE=&quot;font-size:12px&quot; COLOR=&quot;#000000&quot; LETTERSPACING=&quot;0&quot; KERNING=&quot;0&quot;&gt;&lt;B&gt;No,&lt;/B&gt; cancel price book change&lt;/FONT&gt;&lt;/SPAN&gt;</choiceText>
@@ -120,51 +87,11 @@
         </value>
     </choices>
     <decisions>
-        <description>Determine if we found the equivalent product in the new price book.
-If yes then we&apos;ll add it to the new list of line items to create at end of flow.
-If no then add the product name to a list to prompt user about missing products.</description>
-        <name>DidFindNewPriceBookEntry</name>
-        <label>DidFindNewPriceBookEntry</label>
-        <locationX>675</locationX>
-        <locationY>289</locationY>
-        <defaultConnectorLabel>DefaultDidFindNewPriceBookEntryOutcome</defaultConnectorLabel>
-        <rules>
-            <name>FoundNewPriceBookEntry</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>newPriceBookEntry</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>AssignNewOpportunityLineItem</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-        <rules>
-            <name>NotFoundNewPriceBookEntry</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>newPriceBookEntry</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>AssignNotFoundProduct</targetReference>
-            </connector>
-            <label>No</label>
-        </rules>
-    </decisions>
-    <decisions>
         <description>Determine if the user chose to continue with the flow which will delete from the opportunity the products that weren&apos;t found in the new price book or if the user chose to cancel the flow (make no changes to opportunity).</description>
         <name>DidUserDecideToContinue</name>
         <label>DidUserDecideToContinue</label>
         <locationX>40</locationX>
-        <locationY>652</locationY>
+        <locationY>575</locationY>
         <defaultConnectorLabel>DefaultDidUserDecideToContinueOutcome</defaultConnectorLabel>
         <rules>
             <name>UserDecidedYesToContinue</name>
@@ -177,7 +104,7 @@ If no then add the product name to a list to prompt user about missing products.
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>HaveOpportunityLineItemsToDelete</targetReference>
+                <targetReference>Change_Price_Book_with_Fervor</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -195,93 +122,20 @@ If no then add the product name to a list to prompt user about missing products.
         </rules>
     </decisions>
     <decisions>
-        <description>Flow &apos;Create&apos; operations cannot operate on a null or empty list, so we must add a Decision element to check if there are or are not any opportunity line items to actually create. If yes then route through create operation, otherwise skip it.</description>
-        <name>HaveOpportunityLineItemsToCreate</name>
-        <label>HaveOpportunityLineItemsToCreate</label>
-        <locationX>659</locationX>
-        <locationY>754</locationY>
-        <defaultConnectorLabel>DefaultHaveOpportunityLineItemsToCreateOutcome</defaultConnectorLabel>
-        <rules>
-            <name>YesHaveOpportunityLineItemsToCreate</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>newOpportunityLineItems</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>CreateNewOpportunityLineItems</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-        <rules>
-            <name>DontHaveOpportunityLineItemsToCreate</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>newOpportunityLineItems</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <label>No</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Flow &apos;Delete&apos; operations cannot operate on a null or empty list, so we must add a Decision element to check if there are or are not any opportunity line items to actually delete. If yes then route through delete operation, otherwise skip it.</description>
-        <name>HaveOpportunityLineItemsToDelete</name>
-        <label>HaveOpportunityLineItemsToDelete</label>
-        <locationX>203</locationX>
-        <locationY>654</locationY>
-        <defaultConnectorLabel>DefaultHaveOpportunityLineItemsToDeleteOutcome</defaultConnectorLabel>
-        <rules>
-            <name>YesHaveOpportunityLineItemsToDelete</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>opportunityLineItems</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>DeleteOpportunityLineItems</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-        <rules>
-            <name>DontHaveOpportunityLineItemsToDelete</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>opportunityLineItems</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>AssignOpportunityPriceBook</targetReference>
-            </connector>
-            <label>No</label>
-        </rules>
-    </decisions>
-    <decisions>
         <description>Inspect the string of concatenated product names that were not found in the new price book. If the string is not null then at least one product was not found and we need to prompt user on how to proceed, otherwise continue like normal.</description>
         <name>IsNewPriceBookMissingProducts</name>
         <label>IsNewPriceBookMissingProducts</label>
         <locationX>108</locationX>
-        <locationY>407</locationY>
+        <locationY>330</locationY>
         <defaultConnectorLabel>DefaultIsNewPriceBookMissingProductsOutcome</defaultConnectorLabel>
         <rules>
             <name>NewPriceBookIsMissingProducts</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>notFoundProductsString</leftValueReference>
-                <operator>IsNull</operator>
+                <leftValueReference>willLoseLineItems</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
-                    <booleanValue>false</booleanValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -293,18 +147,19 @@ If no then add the product name to a list to prompt user about missing products.
             <name>NewPriceBookIsNotMissingProducts</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>notFoundProductsString</leftValueReference>
-                <operator>IsNull</operator>
+                <leftValueReference>willLoseLineItems</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
-                    <booleanValue>true</booleanValue>
+                    <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>HaveOpportunityLineItemsToDelete</targetReference>
+                <targetReference>Change_Price_Book_with_Fervor</targetReference>
             </connector>
             <label>No</label>
         </rules>
     </decisions>
+    <description>Uses plugin to bulkify the line item DML</description>
     <dynamicChoiceSets>
         <description>Get a list of active price books for user to choose as the new price book to assign to this oppportunity. We exclude the current price book, obviously.</description>
         <name>NewPriceBookChoices</name>
@@ -330,71 +185,7 @@ If no then add the product name to a list to prompt user about missing products.
         <valueField>Id</valueField>
     </dynamicChoiceSets>
     <label>Change Opportunity Price Book and Keep Line Items</label>
-    <description>Takes an opportunity id as parameter. When flow starts it prompts user to choose a new price book for the opportunity then replaces all the line items with equivalent products and quantities from the new price book. If any product cannot be found in the new price book then user is prompted how to proceed: remove from opportunity or cancel operation.</description>
-    <loops>
-        <description>Iterate through the existing line items and build up a new list with the same product, quantity, description, and unit price but using the new price book entry. If a product is not found in the new price book then we&apos;ll keep track of that too and prompt user on how to proceed after the loop.</description>
-        <name>LoopOpportunityLineItems</name>
-        <label>LoopOpportunityLineItems</label>
-        <locationX>105</locationX>
-        <locationY>291</locationY>
-        <assignNextValueToReference>opportunityLineItem</assignNextValueToReference>
-        <collectionReference>opportunityLineItems</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>GetProduct</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>IsNewPriceBookMissingProducts</targetReference>
-        </noMoreValuesConnector>
-    </loops>
     <processType>Flow</processType>
-    <recordCreates>
-        <description>Insert the new opportunity line items that are associated with the new price book the user chose at beginning of the flow.</description>
-        <name>CreateNewOpportunityLineItems</name>
-        <label>CreateNewOpportunityLineItems</label>
-        <locationX>811</locationX>
-        <locationY>754</locationY>
-        <inputReference>newOpportunityLineItems</inputReference>
-    </recordCreates>
-    <recordDeletes>
-        <description>Delete the line items associated to the previous price book.</description>
-        <name>DeleteOpportunityLineItems</name>
-        <label>DeleteOpportunityLineItems</label>
-        <locationX>370</locationX>
-        <locationY>656</locationY>
-        <connector>
-            <targetReference>AssignOpportunityPriceBook</targetReference>
-        </connector>
-        <inputReference>opportunityLineItems</inputReference>
-    </recordDeletes>
-    <recordLookups>
-        <description>Look up the equivalent price book entry for this loop iteration product in the new price book.</description>
-        <name>GetNewPriceBookEntry</name>
-        <label>GetNewPriceBookEntry</label>
-        <locationX>527</locationX>
-        <locationY>292</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>DidFindNewPriceBookEntry</targetReference>
-        </connector>
-        <filters>
-            <field>Pricebook2Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>NewPriceBookIdChoice</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>Product2Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>opportunityLineItem.Product2Id</elementReference>
-            </value>
-        </filters>
-        <object>PricebookEntry</object>
-        <outputReference>newPriceBookEntry</outputReference>
-        <queriedFields>Id</queriedFields>
-    </recordLookups>
     <recordLookups>
         <description>Get the opportunity whose price book to change.</description>
         <name>GetOpportunity</name>
@@ -403,7 +194,7 @@ If no then add the product name to a list to prompt user about missing products.
         <locationY>22</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>GetOpportunityLineItems</targetReference>
+            <targetReference>ChooseNewPriceBook</targetReference>
         </connector>
         <filters>
             <field>Id</field>
@@ -418,72 +209,15 @@ If no then add the product name to a list to prompt user about missing products.
         <queriedFields>Name</queriedFields>
         <queriedFields>Pricebook2Id</queriedFields>
     </recordLookups>
-    <recordLookups>
-        <description>Get all products on the opportunity associated with the current price book. We will copy user-entered data (e.g. description, unit price, etc) onto the new line items that we look up from the new price book. We will then delete these at later step in flow.</description>
-        <name>GetOpportunityLineItems</name>
-        <label>GetOpportunityLineItems</label>
-        <locationX>109</locationX>
-        <locationY>112</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>ChooseNewPriceBook</targetReference>
-        </connector>
-        <filters>
-            <field>OpportunityId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>opportunity.Id</elementReference>
-            </value>
-        </filters>
-        <object>OpportunityLineItem</object>
-        <outputReference>opportunityLineItems</outputReference>
-        <queriedFields>Description</queriedFields>
-        <queriedFields>Product2Id</queriedFields>
-        <queriedFields>Quantity</queriedFields>
-        <queriedFields>UnitPrice</queriedFields>
-    </recordLookups>
-    <recordLookups>
-        <description>Get the product associated with this loop iteration opportunity line item. We will try to find it in the new price book so we can build up the new line items list.</description>
-        <name>GetProduct</name>
-        <label>GetProduct</label>
-        <locationX>379</locationX>
-        <locationY>291</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>GetNewPriceBookEntry</targetReference>
-        </connector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>opportunityLineItem.Product2Id</elementReference>
-            </value>
-        </filters>
-        <object>Product2</object>
-        <outputReference>product</outputReference>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>Name</queriedFields>
-    </recordLookups>
-    <recordUpdates>
-        <description>This is the actual database update operation that switches the opportunity over to the new price book.</description>
-        <name>UpdateOpportunity</name>
-        <label>UpdateOpportunity</label>
-        <locationX>518</locationX>
-        <locationY>754</locationY>
-        <connector>
-            <targetReference>HaveOpportunityLineItemsToCreate</targetReference>
-        </connector>
-        <inputReference>opportunity</inputReference>
-    </recordUpdates>
     <screens>
         <name>ChooseNewPriceBook</name>
         <label>ChooseNewPriceBook</label>
         <locationX>106</locationX>
-        <locationY>202</locationY>
+        <locationY>125</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <connector>
-            <targetReference>LoopOpportunityLineItems</targetReference>
+            <targetReference>Change_Price_Book_with_Caution</targetReference>
         </connector>
         <fields>
             <name>ChooseNewPriceBook_Paragraph1</name>
@@ -507,7 +241,7 @@ If no then add the product name to a list to prompt user about missing products.
         <name>PromptUserToContinue</name>
         <label>PromptUserToContinue</label>
         <locationX>40</locationX>
-        <locationY>546</locationY>
+        <locationY>469</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <connector>
@@ -555,6 +289,16 @@ If no then add the product name to a list to prompt user about missing products.
         </fields>
     </screens>
     <startElementReference>GetOpportunity</startElementReference>
+    <variables>
+        <name>isEndOfFlow</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
     <variables>
         <description>Equivalent line item on the opportunity but now referencing the product from the new price book.</description>
         <name>newOpportunityLineItem</name>
@@ -640,5 +384,15 @@ If no then add the product name to a list to prompt user about missing products.
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>Product2</objectType>
+    </variables>
+    <variables>
+        <name>willLoseLineItems</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
     </variables>
 </Flow>
