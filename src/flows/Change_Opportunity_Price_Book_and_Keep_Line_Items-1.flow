@@ -6,7 +6,7 @@
         <label>Change Price Book with Caution</label>
         <locationX>109</locationX>
         <locationY>228</locationY>
-        <apexClass>ChangeOpportunityPriceBookProcessPlugin</apexClass>
+        <apexClass>ChangeOpportunityPriceBookPlugin</apexClass>
         <connector>
             <targetReference>IsNewPriceBookMissingProducts</targetReference>
         </connector>
@@ -42,7 +42,7 @@
         <label>Change Price Book with Fervor</label>
         <locationX>201</locationX>
         <locationY>574</locationY>
-        <apexClass>ChangeOpportunityPriceBookProcessPlugin</apexClass>
+        <apexClass>ChangeOpportunityPriceBookPlugin</apexClass>
         <inputParameters>
             <name>opportunityId</name>
             <value>
