@@ -23,6 +23,11 @@ This solution requires new Flow elements offered in the [Spring '14 "Flow Trigge
 Deployment: How To
 ==================
 
+<a href="https://githubsfdeploy.herokuapp.com?owner=douglascayers&repo=sfdc-change-opportunity-pricebook-flow">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png">
+</a>
+
 To simplify deployment of this custom code to your org, you may use the [github deploy tool](http://andyinthecloud.com/2013/09/24/deploy-direct-from-github-to-salesforce/) developed by [Andy Fawcett](https://twitter.com/andyinthecloud).
 
 Once deployed, you will need to grant users access to the page as well as override the standard "Choose Price Book" action on the Opportunity Product object (Setup | Customize | Opportunities | Opportunity Products | Buttons and Links)
