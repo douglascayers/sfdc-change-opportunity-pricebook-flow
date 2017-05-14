@@ -1,4 +1,6 @@
 /**
+ * Developed by Doug Ayers (douglascayers.com)
+ *
  * Apex plugin for the Change Opportunity Price Book flow to bulkify
  * the line item lookups and DML operations. In regular flow, this requires
  * lookups within a loop and we quickly exceed the governor SOQL limit.
@@ -18,10 +20,12 @@ global with sharing class ChangeOpportunityPriceBookPlugin implements Process.Pl
 
         String opportunityId = (String) request.inputParameters.get( 'opportunityId' );
         String priceBookId = (String) request.inputParameters.get( 'priceBookId' );
+        Boolean overwriteUnitPrice = (Boolean) request.inputParameters.get( 'overwriteUnitPrice' );
         Boolean stopIfWillLoseLineItems = (Boolean) request.inputParameters.get( 'stopIfWillLoseLineItems' );
 
         System.debug( 'opportunityId=' + opportunityId );
         System.debug( 'priceBookId=' + priceBookId );
+        System.debug( 'overwriteUnitPrice=' + overwriteUnitPrice );
         System.debug( 'stopIfWillLoseLineItems=' + stopIfWillLoseLineItems );
 
         /* Variables
@@ -69,7 +73,7 @@ global with sharing class ChangeOpportunityPriceBookPlugin implements Process.Pl
 
             List<PriceBookEntry> newPriceBookEntries = new List<PriceBookEntry>([
                 SELECT
-                    id, product2Id, product2.name
+                    id, product2Id, product2.name, unitPrice
                 FROM
                     PriceBookEntry
                 WHERE
@@ -89,13 +93,20 @@ global with sharing class ChangeOpportunityPriceBookPlugin implements Process.Pl
                 OpportunityLineItem oldLineItem = oldLineItemsByProductIdMap.get( entry.product2.id );
 
                 if ( oldLineItem != null ) {
-                    newLineItems.add( new OpportunityLineItem(
+
+                    OpportunityLineItem newLineItem = new OpportunityLineItem(
                         opportunityId = opportunityId,
                         priceBookEntryId = entry.id,
                         quantity = oldLineItem.quantity,
-                        unitPrice = oldLineItem.unitPrice,
+                        unitPrice = ( overwriteUnitPrice ? entry.unitPrice : oldLineItem.unitPrice ),
                         description = oldLineItem.description
-                    ));
+                    );
+
+                    System.debug( 'oldLineItem: ' + oldLineItem );
+                    System.debug( 'newLineItem: ' + newLineItem );
+
+                    newLineItems.add( newLineItem );
+
                 }
 
             }
@@ -181,6 +192,13 @@ global with sharing class ChangeOpportunityPriceBookPlugin implements Process.Pl
                 'priceBookId',
                 'The new price book id to change the opportunity to.',
                 Process.PluginDescribeResult.ParameterType.STRING,
+                true
+            ),
+            // Overwrite unit price with new pricebook entry value? (required)
+            new Process.PluginDescribeResult.InputParameter(
+                'overwriteUnitPrice',
+                'If true then sales prices will be updated to the prices in the new price book entries.',
+                Process.PluginDescribeResult.ParameterType.BOOLEAN,
                 true
             ),
             // Stop If Will Lose Line Items (required)
