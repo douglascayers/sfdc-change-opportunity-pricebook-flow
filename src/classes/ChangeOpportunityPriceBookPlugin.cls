@@ -8,7 +8,7 @@
  * https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_process_plugin.htm
  * https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_process_plugin_example_lead_convert.htm
  */
-global with sharing class ChangeOpportunityPriceBookPlugin implements Process.Plugin {
+global without sharing class ChangeOpportunityPriceBookPlugin implements Process.Plugin {
 
     // This method runs when called by a flow's Apex plug-in element.
     global Process.PluginResult invoke( Process.PluginRequest request ) {
