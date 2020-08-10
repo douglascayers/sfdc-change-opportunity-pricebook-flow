@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>W-000041 V1%2E2</fullName>
+    <description>Test: ChangeOpportunityPriceBookPluginTest</description>
     <types>
         <members>ChangeOpportunityPriceBookPlugin</members>
         <members>ChangeOpportunityPriceBookPluginTest</members>
+        <members>ChatterBotPostMessageInvocable</members>
+        <members>ChatterBotPostMessageInvocableTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -10,12 +14,12 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>Change_Opportunity_Price_Book_and_Keep_Line_Items-1</members>
-        <name>Flow</name>
+        <members>lightningoutflow</members>
+        <name>AuraDefinitionBundle</name>
     </types>
     <types>
         <members>Change_Opportunity_Price_Book_and_Keep_Line_Items</members>
-        <name>FlowDefinition</name>
+        <name>Flow</name>
     </types>
-    <version>39.0</version>
+    <version>49.0</version>
 </Package>
