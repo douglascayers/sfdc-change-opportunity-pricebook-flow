@@ -5,8 +5,6 @@
     <types>
         <members>ChangeOpportunityPriceBookPlugin</members>
         <members>ChangeOpportunityPriceBookPluginTest</members>
-        <members>ChatterBotPostMessageInvocable</members>
-        <members>ChatterBotPostMessageInvocableTest</members>
         <name>ApexClass</name>
     </types>
     <types>
