@@ -49,7 +49,11 @@ private class ChangeOpportunityPriceBookPluginTest {
         insert pbeB2;
 
         Account acct = new Account(
-            name = 'Test Account'
+            name = 'Test Account',
+            ShippingStreet = '123 Main St',
+            ShippingCity = 'Beverly Hills',
+            ShippingState = 'California',
+            ShippingPostalCode = '90210'
         );
         insert acct;
 
@@ -168,7 +172,11 @@ private class ChangeOpportunityPriceBookPluginTest {
         insert pbeB2;
 
         Account acct = new Account(
-            name = 'Test Account'
+            name = 'Test Account',
+            ShippingStreet = '456 Main St',
+            ShippingCity = 'Beverly Hills',
+            ShippingState = 'California',
+            ShippingPostalCode = '90210'
         );
         insert acct;
 

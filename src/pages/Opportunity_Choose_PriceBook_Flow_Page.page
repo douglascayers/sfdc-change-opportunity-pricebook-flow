@@ -1,6 +1,59 @@
 <apex:page standardController="Opportunity" showHeader="true" sidebar="false">
-    <flow:interview name="Change_Opportunity_Price_Book_and_Keep_Line_Items"
+    <head>
+        <apex:includeLightning />
+        <apex:slds />
+    </head>
+        <body class="slds-scope" style="max-width:600px">
+          <div id="flowContainer" />
+         <script>
+            var statusChange = function (event) {
+               if(event.getParam("status") === "FINISHED") {
+                  // Control what happens when the interview finishes
+ 
+                  var outputVariables = event.getParam("outputVariables");
+                  var key;
+                  for(key in outputVariables) {
+                     if(outputVariables[key].name === "finishLocation") {
+                            var urlEvent = $A.get("e.force:navigateToSObject");
+                                urlEvent.setParams({
+                                    "recordId": outputVariables[key].value,
+                                    "isredirect": "true"
+                                });
+                         //does not work in vf currently maybe in the future       
+                         urlEvent.fire();   
+                         //fire off window location for classic vf rendering
+                         parent.window.location = "/"+outputVariables[key].value;
+                     }              
+                  }
+               }   
+            };
+
+            $Lightning.use("c:lightningoutflow", function() {
+               // Create the flow component and set the onstatuschange attribute
+               $Lightning.createComponent("lightning:flow", {"onstatuschange":statusChange},
+                  "flowContainer",
+                  function (component) {
+                     // Set the input variables
+                     var inputVariables = [
+                        {
+                           name : 'opportunityId',
+                           type : 'String',
+                           value : "{!record.id}"
+                        }                
+                     ];
+                     
+                     // Start an interview in the flowContainer div, and 
+                     // initializes the input variables.
+                     component.startFlow("Change_Opportunity_Price_Book_and_Keep_Line_Items", inputVariables);
+                  }
+               );
+            });
+         </script>
+<!--
+            <flow:interview name="Change_Opportunity_Price_Book_and_Keep_Line_Items"
                     finishLocation="{!URLFOR($Action.Opportunity.View, record.id)}">
-        <apex:param name="opportunityId" value="{!record.id}"/>
-    </flow:interview>
+                <apex:param name="opportunityId" value="{!record.id}"/>
+            </flow:interview>
+-->
+        </body>
 </apex:page>
